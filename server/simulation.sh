@@ -23,7 +23,7 @@
 #PBS -l mem=1gb
 
 #PBS -m abe
-#PBS -M nioche.aurelien@gmail.com
+#PBS -M clusterresultssimulation@gmail.com
 
 # fin des directives PBS
 #############################

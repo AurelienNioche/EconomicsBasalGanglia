@@ -27,7 +27,7 @@ class ParametersGenerator(object):
 
         self.workforce_step = 10
         self.workforce_mini = 50
-        self.workforce_maxi = 500
+        self.workforce_maxi = 100
     
         self.date = date()
 
