@@ -11,7 +11,7 @@
 
 
 # Specify the working directory
-#PBS -d /home/anioche/aurelien/EcoBGModel-master/EcoBGModel/
+#PBS -d /home/anioche/aurelien/EcoBGModel-master/EcoBGModel
 
 # walltime (hh:mm::ss)
 #PBS -l walltime=02:00:00
@@ -47,10 +47,10 @@ echo "#############################"
 
 # What you actually want to launch
 echo "Start the job"
-echo main.py ../data/input_parameters/slice_0.p
+echo main.py ~/aurelien/EcoBGModel-master/data/input_parameters/slice_0.p
 
 # launch python script with pickle object for parameters
-python main.py ../data/input_parameters/slice_0.p
+python main.py ~/aurelien/EcoBGModel-master/data/input_parameters/slice_0.p
 
 # all done
 echo "Job finished"
