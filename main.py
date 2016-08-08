@@ -13,7 +13,9 @@ def get_parameters():
 
     args = parser.parse_args()
 
-    parameters = pickle.load(open(args.parameters, mode='rb'))
+    pickle_file = args.parameters
+
+    parameters = pickle.load(open(pickle_file, mode='rb'))
 
     return parameters
 
