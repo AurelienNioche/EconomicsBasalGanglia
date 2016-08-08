@@ -14,8 +14,11 @@ def get_parameters():
     args = parser.parse_args()
 
     pickle_file = args.parameters
-
-    parameters = pickle.load(open(pickle_file, mode='rb'))
+    try:
+        parameters = pickle.load(open(pickle_file, mode='rb'))
+    except Exception as e:
+        print("Problemns in loading", pickle_file)
+        raise e
 
     return parameters
 
