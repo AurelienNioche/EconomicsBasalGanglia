@@ -80,6 +80,8 @@ class ParametersGenerator(object):
                 {
                     "workforce": np.array(workforce, dtype=int),
                     "t_max": self.t_max,  # Set the number of time units the simulation will run
+                    "model": "BG",
+                    "cpu_count": 8,
                     "idx": idx,  # For saving
                     "date": self.date  # For saving
 
