@@ -2,10 +2,10 @@
 # Copyright (c) 2016, Nicolas P. Rougier
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
-import os
 import json
+import os
+
 import numpy as np
-from cdana.cdana import *
 
 
 class Model(object):
@@ -15,7 +15,8 @@ class Model(object):
         self.filename = filename
         with open(os.path.join(os.path.dirname(__file__), filename)) as f:
             self.parameters = json.load(f, )
-        np.random.seed(np.random.randint(4294967295))
+        # np.random.seed(np.random.randint(4294967295))
+        np.random.seed()
         self._structures = None
         self._groups = None
         self._links = None
