@@ -1,5 +1,6 @@
-import pickle
 import argparse
+import pickle
+import sys
 from module.SimulationManager import Launcher
 from module.save_eco import BackUp
 
@@ -24,6 +25,10 @@ def get_parameters():
 
 
 def main():
+
+    if sys.version_info[0] < 3:
+
+        raise Exception("Should use Python 3")
 
     parameters = get_parameters()
     results = Launcher.launch(parameters, single=False)
