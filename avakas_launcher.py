@@ -1,28 +1,42 @@
 import subprocess
 import pickle
+from os import chdir
 
 
 def load_args():
 
-    script_names = pickle.load(open("../scripts/avakas_launcher_args.p", mode='rb'))
+    script_names = pickle.load(open("avakas_launcher_args.p", mode='rb'))
     return script_names
 
 
 def save_job_names(job_names):
 
-    pickle.dump(job_names, open("../scripts/avakas_job_names.p", mode='wb'))
+    pickle.dump(job_names, open("avakas_job_names.p", mode='wb'))
 
 
 def main():
 
-    job_names = []
+    chdir("../scripts")
+
     script_names = load_args()
-    print(script_names)
+
+    a = subprocess.check_output("pyenv local 2.7.12".split())
+    print(a)
+
+    job_names = []
+
+    # print(script_names)
 
     for script_name in script_names:
-        a = subprocess.check_output("qsub {}".format(script_name).split())
-        print(a)
+
+        print("Launch script '{}'...".format(script_name))
+        a = subprocess.check_output("qsub {}".format(script_name.split("../scripts/")[1]).split())
+
+        print("System answers '{}'.".format(a))
         job_names.append(str(a).split(".")[0])  # Remove the \n at the end
+
+    a = subprocess.check_output("pyenv local 3.5.2".split())
+    print(a)
 
     save_job_names(job_names)
 

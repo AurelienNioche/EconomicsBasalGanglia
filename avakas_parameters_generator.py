@@ -155,8 +155,6 @@ class ParametersGenerator(object):
         root_file = "{}/simulation.sh".format(self.folders["macro"])
         prefix_output_file = "{}/ecoBG-simulation_".format(self.folders["scripts"])
 
-        script_names = []
-
         for i in range(self.nb_sub_list):
             f = open(root_file, 'r')
             content = f.read()
@@ -171,20 +169,23 @@ class ParametersGenerator(object):
             f.write(replaced)
             f.close()
 
-            script_names.append(script_name)
-
         print("Scripts created.")
 
-        return script_names
+    def create_meta_launcher(self):
 
-    def create_meta_launcher(self, script_names):
+        # print("Create launch script...")
+        #
+        # pickle.dump(script_names,
+        #             open("{}/avakas_launcher_args.p".format(self.folders["scripts"]), mode='wb'))
+        #
+        # print("Script created.")
 
-        print("Create launch script...")
+        content = "# !/usr/bin/env bash\n" \
+                  "for i in {0..%d}; do\nqsub ecoBGModel-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
 
-        pickle.dump(script_names,
-                    open("{}/avakas_launcher_args.p".format(self.folders["scripts"]), mode='wb'))
-
-        print("Script created.")
+        f = open("{}/meta_launcher.sh".format(self.folders["scripts"]), 'w')
+        f.write(content)
+        f.close()
     
     def run(self):
 
@@ -206,8 +207,8 @@ class ParametersGenerator(object):
             self.empty_scripts_folder()
             self.create_folders()
             self.save_input_parameters(input_parameters, suffixes_list)
-            script_names = self.create_scripts()
-            self.create_meta_launcher(script_names)
+            self.create_scripts()
+            self.create_meta_launcher()
 
             print("Done!")
 
