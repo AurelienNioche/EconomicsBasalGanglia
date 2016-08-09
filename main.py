@@ -30,9 +30,12 @@ def main():
 
         raise Exception("Should use Python 3")
 
-    parameters = get_parameters()
-    results = Launcher.launch(parameters, single=False)
-    BackUp.save_data(results=results, parameters=parameters)
+    parameters_list = get_parameters()
+
+    for parameters in parameters_list:
+
+        results = Launcher.launch(parameters, single=False)
+        BackUp.save_data(results=results, parameters=parameters)
 
 
 if __name__ == "__main__":

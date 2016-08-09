@@ -4,13 +4,13 @@ import pickle
 
 def load_args():
 
-    script_names = pickle.load(open("../data/scripts/avakas_launcher_args.p", mode='rb'))
+    script_names = pickle.load(open("../scripts/avakas_launcher_args.p", mode='rb'))
     return script_names
 
 
 def save_job_names(job_names):
 
-    pickle.dump(job_names, open("../data/scripts/avakas_job_names.p", mode='wb'))
+    pickle.dump(job_names, open("../scripts/avakas_job_names.p", mode='wb'))
 
 
 def main():

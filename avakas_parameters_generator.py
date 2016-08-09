@@ -15,19 +15,11 @@ class ParametersGenerator(object):
 
     def __init__(self):
 
-        self.alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5]
-        self.tau_list = [0.01, 0.02, 0.03, 0.04, 0.05]
-        self.vision_list = [1, 3, 6, 12, 15]
-        self.area_list = [1, 3, 6, 12, 15]
+        self.t_max = 5000
 
-        self.stride = 1
-        self.t_max = 600
-        self.width = 30
-        self.height = 30
-
-        self.workforce_step = 10
+        self.workforce_step = 25
         self.workforce_mini = 50
-        self.workforce_maxi = 100
+        self.workforce_maxi = 300
     
         self.date = date()
 
@@ -36,14 +28,14 @@ class ParametersGenerator(object):
         self.folders = OrderedDict(
             [
                 ("macro", "server"),
+                ("scripts", "../scripts"),
                 ("root", root_folder),
                 ("parameters", "{}/input_parameters".format(root_folder)),
                 ("session", "{}/session".format(root_folder)),
-                ("scripts", "{}/scripts".format(root_folder))
             ]
         )
 
-        self.nb_sub_list = None
+        self.nb_sub_list = 100
 
     def empty_scripts_folder(self):
 
@@ -102,13 +94,54 @@ class ParametersGenerator(object):
 
         return parameters_list, suffixes_list
 
-    def save_parameters_list(self, parameters_list, suffixes_list):
+    def generate_input_parameters(self, parameters_list):
+
+        len_sub_part = len(parameters_list) / self.nb_sub_list
+        rounded_len_sub_part = int(len_sub_part)
+
+        # If there is more tasks than jobs...
+
+        if len_sub_part > 1:
+
+            input_parameters_dict = {}  # Keys will be the ID of the script to be executed
+
+            cursor = 0
+
+            for i in range(self.nb_sub_list):
+
+                part = parameters_list[cursor:cursor + rounded_len_sub_part]
+                input_parameters_dict[i] = part
+                cursor += rounded_len_sub_part
+
+            while cursor < len(parameters_list):
+
+                for i in range(self.nb_sub_list):
+
+                    if cursor < len(parameters_list):
+                        input_parameters_dict[i].append(parameters_list[cursor])
+                        cursor += 1
+
+        # If there is an equal number of tasks and jobs, or less...
+        else:
+
+            len_sub_part = 1
+            self.nb_sub_list = len(parameters_list)
+
+            input_parameters_dict = {}
+            for i in range(self.nb_sub_list):
+
+                # Input parameters for a job is a list containing a unique element
+                input_parameters_dict[i] = [parameters_list[i]]
+
+        return input_parameters_dict, len_sub_part
+
+    def save_input_parameters(self, input_parameters, suffixes_list):
 
         print("Save input parameters...")
         
-        for i, parameters in enumerate(parameters_list):
+        for i in range(len(input_parameters)):
 
-            pickle.dump(parameters,
+            pickle.dump(input_parameters[i],
                         open("{}/slice_{}.p".format(self.folders["parameters"], i), mode="wb"))
 
         pickle.dump(suffixes_list,  open("{}/session_{}.p".format(self.folders["session"], self.date), mode="wb"))
@@ -157,12 +190,14 @@ class ParametersGenerator(object):
 
         workforce_list = self.generate_workforce_list()
         parameters_list, suffixes_list = self.generate_parameters_list(workforce_list=workforce_list)
-        self.nb_sub_list = len(parameters_list)
+        input_parameters, len_sub_part = self.generate_input_parameters(parameters_list)
 
-        response = input("Number of tasks: {}. Should I proceed?".format(self.nb_sub_list))
+        response = input("Number of jobs: {}; number of tasks per job: {}; "
+                         "total number of tasks: {}. \n"
+                         "Should I proceed?".format(self.nb_sub_list, len_sub_part,
+                                                    len(parameters_list)))
         while response not in ['y', 'yes', 'n', 'no', 'Y', 'N']:
-            response = input("You can only respond by 'yes' or 'no'.\n"
-                             "Number of tasks: {}. Should I proceed?".format(self.nb_sub_list))
+            response = input("You can only respond by 'yes' or 'no'.")
 
         if response in ['y', 'yes', 'Y']:
 
@@ -170,7 +205,7 @@ class ParametersGenerator(object):
 
             self.empty_scripts_folder()
             self.create_folders()
-            self.save_parameters_list(parameters_list, suffixes_list)
+            self.save_input_parameters(input_parameters, suffixes_list)
             script_names = self.create_scripts()
             self.create_meta_launcher(script_names)
 
