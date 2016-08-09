@@ -106,7 +106,7 @@ class Launcher(object):
 
 def simple_run():
 
-    t_max = 500
+    t_max = 1000
     model = "BG"
 
     param = \
