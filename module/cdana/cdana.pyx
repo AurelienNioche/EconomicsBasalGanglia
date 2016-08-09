@@ -8,6 +8,7 @@
 import numpy as np
 cimport numpy as np
 from libc.math cimport exp
+from libc.stdlib cimport rand, srand, RAND_MAX
 
 
 # ---------------------------------------------------------------- Function ---
@@ -43,10 +44,11 @@ cdef class UniformNoise(Function):
     cdef public double amount
 
     def __init__(self, double amount):
-        self.half_amount = amount/2.0
+        self.amount = amount
 
     cdef double call(self, double x) except *:
-        return x + np.random.uniform(-self.half_amount, self.half_amount)
+        return x + self.amount*(rand()/float(RAND_MAX) - 0.5)
+
 
 # --- Sigmoid ---
 cdef class Sigmoid(Function):
@@ -65,15 +67,15 @@ cdef class Sigmoid(Function):
 
 # ------------------------------------------------------------------- Group ---
 # Python group type (dtype)
-dtype = [("U",  float),
-         ("V",  float),
+dtype = [("V",  float),
+         ("U",  float),
          ("Isyn",  float),
          ("Iext", float)]
 
 # C group type (ctype)
 cdef packed struct ctype:
-    np.float64_t U
     np.float64_t V
+    np.float64_t U
     np.float64_t Isyn
     np.float64_t Iext
 
@@ -133,12 +135,12 @@ cdef class Group:
             self._rest = value
 
     property V:
-        """ Membrane potential """
+        """ Firing rate """
         def __get__(self):
             return np.asarray(self._units)["V"]
 
     property U:
-        """ Firing rate """
+        """ Membrane potential """
         def __get__(self):
             return np.asarray(self._units)["U"]
 
@@ -160,27 +162,27 @@ cdef class Group:
         cdef int i
         cdef noise
         cdef ctype * unit
-        cdef double max1=float('-inf'), max2=float('-inf')
-
+        cdef double max1=0, max2=0
+            
         for i in range(len(self._units)):
             unit = & self._units[i]
 
             # Compute white noise
-            noise = np.random.uniform(-0.5*self._noise, 0.5*self._noise)
+            noise = self._noise*(rand()/float(RAND_MAX) - 0.5) 
 
             # Update membrane potential
-            unit.V += dt/self._tau*(-unit.V + unit.Isyn + unit.Iext - self._rest )
-
+            unit.U += dt/self._tau*(-unit.U + unit.Isyn + unit.Iext - self._rest )
+            
             # Update firing rate
-            unit.U = self._activation.call(unit.V * (1 + noise))
-
+            unit.V = self._activation.call(unit.U *(1 + noise))
+            
             # Store firing rate activity
-            self._history[self._history_index,i] = unit.U
+            self._history[self._history_index,i] = unit.V
 
             # Here we record the max activities to store their difference
             # This is used later to decide if a motor decision has been made
-            if   unit.U > max1: max1, max2 = unit.U, max1
-            elif unit.U > max2: max2 = unit.U
+            if unit.V > max1:   max1 = unit.V
+            elif unit.V > max2: max2 = unit.V
 
         self._delta = max1 - max2
         self._history_index +=1
@@ -192,8 +194,8 @@ cdef class Group:
         cdef int i
         self._history_index = 0
         for i in range(len(self._units)):
-            self._units[i].U = 0
             self._units[i].V = 0
+            self._units[i].U = 0
             self._units[i].Isyn = 0
             self._units[i].Iext = 0
 
@@ -264,7 +266,6 @@ cdef class OneToOne(Connection):
 cdef class OneToAll(Connection):
     def propagate(self):
         cdef int i,j
-        cdef double v
         for i in range(4):
             v = self._source[i] * self._weights[i] * self._gain
             for j in range(4):
@@ -274,7 +275,6 @@ cdef class OneToAll(Connection):
 cdef class AssToMot(Connection):
     def propagate(self):
         cdef int i,j
-        cdef double v
         for i in range(4):
             v = 0
             for j in range(4):
@@ -285,7 +285,6 @@ cdef class AssToMot(Connection):
 cdef class AssToCog(Connection):
     def propagate(self):
         cdef int i,j
-        cdef double v
         for i in range(4):
             v = 0
             for j in range(4):
@@ -318,10 +317,9 @@ cdef class CogToAss(Connection):
 cdef class AllToAll(Connection):
     def propagate(self):
         cdef int i,j
-        cdef double v
         cdef int s_size = self._source.shape[0]
         cdef int t_size = self._target.shape[0]
-
+        
         for i in range(t_size):
             v = 0
             for j in range(s_size):

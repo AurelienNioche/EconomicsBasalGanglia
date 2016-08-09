@@ -2,33 +2,33 @@
 # Copyright (c) 2016, Nicolas P. Rougier
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
-import json
 import os
-from cdana.cdana import *
+import json
 import numpy as np
+from module.cdana.cdana import *
 
 
 class Model(object):
-
     def __init__(self, filename="model-topalidou.json"):
-
         self.filename = filename
         with open(os.path.join(os.path.dirname(__file__), filename)) as f:
-            self.parameters = json.load(f, )
-        # np.random.seed(np.random.randint(4294967295))
+            self.parameters = json.load(f)
         np.random.seed()
-        self._structures = None
-        self._groups = None
-        self._links = None
 
         # ---- #
-        self.strategies = None
-        # ---- #
+        self.strategies = np.array(
+            [[1, 0, 1, 0],
+             [1, 0, 0, 1],
+             [0, 1, 1, 0],
+             [0, 1, 0, 1]]
+        )
 
+        self.output_t = {"cog": None, "mot": None, "RT": None}
+
+        # ---- #
         self.setup()
 
     def setup(self):
-
         _ = self.parameters
 
         clamp = Clamp(min=_["clamp"]["Vmin"],
@@ -83,64 +83,64 @@ class Model(object):
         W2 = (2 * np.eye(16) - np.ones((16, 16))).ravel()
 
         self._links = {
-            "CTX:cog -> STR:cog":
+            "CTX:cog → STR:cog":
                 OneToOne(CTX["cog"]["V"], STR["cog"]["Isyn"], weights(4), 0.0),
-            "CTX:cog -> STR:ass":
+            "CTX:cog → STR:ass":
                 CogToAss(CTX["cog"]["V"], STR["ass"]["Isyn"], weights(4), 0.0),
-            "CTX:cog -> STN:cog":
+            "CTX:cog → STN:cog":
                 OneToOne(CTX["cog"]["V"], STN["cog"]["Isyn"], np.ones(4), 0.0),
-            "CTX:cog -> THL:cog":
+            "CTX:cog → THL:cog":
                 OneToOne(CTX["cog"]["V"], THL["cog"]["Isyn"], np.ones(4), 0.0),
 
-            "CTX:mot -> STR:mot":
+            "CTX:mot → STR:mot":
                 OneToOne(CTX["mot"]["V"], STR["mot"]["Isyn"], weights(4), 0.0),
-            "CTX:mot -> STR:ass":
+            "CTX:mot → STR:ass":
                 MotToAss(CTX["mot"]["V"], STR["ass"]["Isyn"], weights(4), 0.0),
-            "CTX:mot -> STN:mot":
+            "CTX:mot → STN:mot":
                 OneToOne(CTX["mot"]["V"], STN["mot"]["Isyn"], np.ones(4), 0.0),
-            "CTX:mot -> THL:mot":
+            "CTX:mot → THL:mot":
                 OneToOne(CTX["mot"]["V"], THL["mot"]["Isyn"], np.ones(4), 0.0),
 
-            "CTX:ass -> STR:ass":
+            "CTX:ass → STR:ass":
                 OneToOne(CTX["ass"]["V"], STR["ass"]["Isyn"], weights(16), 0.0),
 
-            "STR:cog -> GPi:cog":
+            "STR:cog → GPi:cog":
                 OneToOne(STR["cog"]["V"], GPi["cog"]["Isyn"], np.ones(4), 0.0),
-            "STR:mot -> GPi:mot":
+            "STR:mot → GPi:mot":
                 OneToOne(STR["mot"]["V"], GPi["mot"]["Isyn"], np.ones(4), 0.0),
-            "STR:ass -> GPi:cog":
+            "STR:ass → GPi:cog":
                 AssToCog(STR["ass"]["V"], GPi["cog"]["Isyn"], np.ones(4), 0.0),
-            "STR:ass -> GPi:mot":
+            "STR:ass → GPi:mot":
                 AssToMot(STR["ass"]["V"], GPi["mot"]["Isyn"], np.ones(4), 0.0),
 
-            "STN:cog -> GPi:cog":
+            "STN:cog → GPi:cog":
                 OneToAll(STN["cog"]["V"], GPi["cog"]["Isyn"], np.ones(4), 0.0),
-            "STN:mot -> GPi:mot":
+            "STN:mot → GPi:mot":
                 OneToAll(STN["mot"]["V"], GPi["mot"]["Isyn"], np.ones(4), 0.0),
 
-            "GPi:cog -> THL:cog":
+            "GPi:cog → THL:cog":
                 OneToOne(GPi["cog"]["V"], THL["cog"]["Isyn"], np.ones(4), 0.0),
-            "GPi:mot -> THL:mot":
+            "GPi:mot → THL:mot":
                 OneToOne(GPi["mot"]["V"], THL["mot"]["Isyn"], np.ones(4), 0.0),
 
-            "THL:cog -> CTX:cog":
+            "THL:cog → CTX:cog":
                 OneToOne(THL["cog"]["V"], CTX["cog"]["Isyn"], np.ones(4), 0.0),
-            "THL:mot -> CTX:mot":
+            "THL:mot → CTX:mot":
                 OneToOne(THL["mot"]["V"], CTX["mot"]["Isyn"], np.ones(4), 0.0),
 
-            "CTX:mot -> CTX:mot":
+            "CTX:mot → CTX:mot":
                 AllToAll(CTX["mot"]["V"], CTX["mot"]["Isyn"], W1, 0.0),
-            "CTX:cog -> CTX:cog":
+            "CTX:cog → CTX:cog":
                 AllToAll(CTX["cog"]["V"], CTX["cog"]["Isyn"], W1, 0.0),
-            "CTX:ass -> CTX:ass":
+            "CTX:ass → CTX:ass":
                 AllToAll(CTX["ass"]["V"], CTX["ass"]["Isyn"], W2, 0.0),
-            "CTX:ass -> CTX:cog":
+            "CTX:ass → CTX:cog":
                 AssToCog(CTX["ass"]["V"], CTX["cog"]["Isyn"], np.ones(4), 0.0),
-            "CTX:ass -> CTX:mot":
+            "CTX:ass → CTX:mot":
                 AssToMot(CTX["ass"]["V"], CTX["mot"]["Isyn"], np.ones(4), 0.0),
-            "CTX:cog -> CTX:ass":
+            "CTX:cog → CTX:ass":
                 CogToAss(CTX["cog"]["V"], CTX["ass"]["Isyn"], weights(4), 0.0),
-            "CTX:mot -> CTX:ass":
+            "CTX:mot → CTX:ass":
                 MotToAss(CTX["mot"]["V"], CTX["ass"]["Isyn"], weights(4), 0.0)
         }
         for key, link in self._links.items():
@@ -148,15 +148,12 @@ class Model(object):
                 link.gain = _["gain"][key]
 
     def __getitem__(self, key):
-
         try:
             return self._structures[key]
-
         except KeyError:
             return self._links[key]
 
     def flush(self):
-
         for group in self._groups:
             group.flush()
 
@@ -174,14 +171,7 @@ class Model(object):
         for group in self._groups:
             group.evaluate(dt)
 
-    def set_possible_strategies(self, possible_strategies):
-
-        self.strategies = np.asarray(possible_strategies)
-
-    def choose(self, possible_choices, stop=True):
-
-        assert self.strategies is not None, \
-            "Before calling 'choose' method, a call to 'set_possible_strategies' is needed"
+    def choose(self, possible_moves, possible_strategies=np.ones(4), stop=True):
 
         _ = self.parameters
 
@@ -199,8 +189,8 @@ class Model(object):
         # Trial setup
         V = _["input"]["potential"]
         noise = _["input"]["noise"]
-        self["CTX"]["cog"]["Iext"] = V * np.ones(len(self.strategies)) * (1 + np.random.normal(0, noise, 4))
-        self["CTX"]["mot"]["Iext"] = V * possible_choices * (1 + np.random.normal(0, noise, 4))
+        self["CTX"]["cog"]["Iext"] = V * possible_strategies * (1 + np.random.normal(0, noise, 4))
+        self["CTX"]["mot"]["Iext"] = V * possible_moves * (1 + np.random.normal(0, noise, 4))
         self["CTX"]["ass"]["Iext"] = V * self.strategies.ravel() * (1 + np.random.normal(0, noise, 16))
 
         # Trial process (max 2500ms)
@@ -219,28 +209,22 @@ class Model(object):
         RT = i * dt
 
         if decision is False:
-            print("  No decision")
-            info_to_return = {"cog": -1, "mot": -1, "RT": RT}
-
+            # print("  No decision")
+            self.output_t["mot"] = -1
+            self.output_t["cog"] = -1
         else:
-            mot = np.argmax(self["CTX"]["mot"]["U"])
-            cog = np.argmax(self["CTX"]["cog"]["U"])
+            self.output_t["mot"] = np.argmax(self["CTX"]["mot"]["U"])
+            self.output_t["cog"] = np.argmax(self["CTX"]["cog"]["U"])
 
-            # actual_cue = np.argmax(self["CTX"]["cog"]["U"])
-            info_to_return = {"cog": cog, "mot": mot, "RT": RT}
+        self.output_t["RT"] = RT
 
-        return info_to_return
+        return self.output_t
 
     def learn(self, reward):
 
-        if reward is None:
-            return
-
         _ = self.parameters
 
-        cog = np.argmax(self["CTX"]["cog"]["U"])
-
-        choice = cog
+        choice = self.output_t["cog"]
 
         # Constants
         Wmin = _["weight"]["min"]
@@ -253,26 +237,15 @@ class Model(object):
         error = reward - self["value"][choice]
         self["value"][choice] += error * alpha
         alpha = LTP if error > 0 else LTD
-        dw = error * alpha * self["STR"]["cog"]["U"][choice]
-        W = self["CTX:cog -> STR:cog"].weights
+        dw = error * alpha * self["STR"]["cog"]["V"][choice]
+        W = self["CTX:cog → STR:cog"].weights
         W[choice] += dw * (Wmax - W[choice]) * (W[choice] - Wmin)
 
-        # Hebbian learning
-        # This is the chosen cue by the model (may be different from the actual cue)
+        # # Hebbian learning
+        # # This is the chosen cue by the model (may be different from the actual cue)
         # cue = np.argmax(self["CTX"]["cog"]["U"])
-        #
-        # LTP = _["Hebbian"]["LTP"]
-        # dw = LTP * self["CTX"]["cog"]["U"][cue] * self["CTX"]["ass"]["U"][cue]
-        # W = self["CTX:cog -> CTX:ass"].weights
+
+        # LTP   = _["Hebbian"]["LTP"]
+        # dw = LTP * self["CTX"]["cog"]["V"][cue]
+        # W = self["CTX:cog → CTX:ass"].weights
         # W[cue] += dw * (Wmax-W[cue])*(W[cue]-Wmin)
-
-if __name__ == "__main__":
-
-    m = Model()
-    m.set_possible_strategies(np.array([[1., 0., 1., 0.],
-                                        [1., 0., 0., 1.],
-                                        [0., 1., 1., 0.],
-                                        [0., 1., 0., 1.]]))
-    choice = m.choose(possible_choices=np.array([1., 1., 0., 0.]))
-    print("Choice", choice)
-    m.learn(reward=1)

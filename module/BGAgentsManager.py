@@ -45,10 +45,10 @@ class EcoProcess(Process):
 
                     possible_choices = self.possibilities[p_choices[i]]
 
-                    choice = agents[i].choose(possible_choices=possible_choices)
+                    choice = agents[i].choose(possible_moves=possible_choices)
 
                     while choice["mot"] == -1:
-                        choice = agents[i].choose(possible_choices=possible_choices)
+                        choice = agents[i].choose(possible_moves=possible_choices)
 
                     choices.append(choice)
 
@@ -74,7 +74,6 @@ class EcoProcess(Process):
         for i in range(self.n):
 
             model = BGModel()
-            model.set_possible_strategies(self.possible_strategies)
             agents.append(model)
 
         return agents
@@ -254,16 +253,10 @@ def simple_main():
     # Test a unique agent to be sure that everything is working as expected
 
     print("Test a single agent...")
-    possible_strategies = \
-        np.array([[1., 0., 1., 0.],
-                  [1., 0., 0., 1.],
-                  [0., 1., 1., 0.],
-                  [0., 1., 0., 1.]])
 
     model = BGModel()
 
-    model.set_possible_strategies(possible_strategies)
-    choice = model.choose(np.array([1., 1., 0., 0.]))
+    choice = model.choose(possible_moves=np.array([1., 1., 0., 0.]))
 
     print("Agent choice:", choice)
     print()

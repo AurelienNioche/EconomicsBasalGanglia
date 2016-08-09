@@ -3,6 +3,7 @@ from collections import OrderedDict
 from tqdm import tqdm
 from multiprocessing import cpu_count
 from module.eco import Economy
+from module.save_eco import BackUp
 from module.BGAgentsManager import BGAgentsManager
 from module.RLAgentsManager import RLAgentsManager
 
@@ -105,20 +106,21 @@ class Launcher(object):
 
 def simple_run():
 
-    t_max = 1000
+    t_max = 500
     model = "BG"
 
     param = \
         {
-            "workforce": np.array([50, 50, 300], dtype=int),
+            "workforce": np.array([50, 50, 100], dtype=int),
             "t_max": t_max,  # Set the number of time units the simulation will run.
             "cpu_count": cpu_count(),
-            "model": model
+            "model": model,
+            "date": "example",
+            "idx": 0
         }
 
-    result = Launcher.launch(param)
-
-    return result
+    results = Launcher.launch(param)
+    BackUp.save_data(results=results, parameters=param, root_folder="../../data")
 
 
 if __name__ == "__main__":

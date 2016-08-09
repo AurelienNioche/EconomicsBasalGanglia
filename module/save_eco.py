@@ -5,9 +5,9 @@ from os import path, mkdir
 class BackUp(object):
 
     @classmethod
-    def save_data(cls, results, parameters):
+    def save_data(cls, results, parameters, root_folder="../data"):
 
-        cls.create_folders()
+        cls.create_folders(root_folder)
 
         print("\nSaving data...")
 
@@ -17,20 +17,20 @@ class BackUp(object):
         indirect_exchanges = results["indirect_exchanges"]
 
         dump(direct_exchanges,
-             open("../data/exchanges/direct_exchanges_{}.p".format(saving_name), mode='wb'))
+             open("{}/exchanges/direct_exchanges_{}.p".format(root_folder, saving_name), mode='wb'))
 
         dump(indirect_exchanges,
-             open("../data/exchanges/indirect_exchanges_{}.p".format(saving_name), mode='wb'))
+             open("{}/exchanges/indirect_exchanges_{}.p".format(root_folder, saving_name), mode='wb'))
 
         dump(parameters,
-             open("../data/parameters/parameters_{}.p".format(saving_name), mode='wb'))
+             open("{}/parameters/parameters_{}.p".format(root_folder, saving_name), mode='wb'))
 
         print("\nData saved...")
 
     @classmethod
-    def create_folders(cls):
+    def create_folders(cls, root_folder):
 
-        folders = ["../data", "../data/parameters", "../data/exchanges"]
+        folders = [root_folder, "{}/parameters".format(root_folder), "{}/exchanges".format(root_folder)]
         for i in folders:
 
             if not path.exists(i):

@@ -22,12 +22,6 @@ class RLAgentsManager(object):
                                        [1, ] * self.workforce[1],
                                        [2, ] * self.workforce[2]))
 
-        self.possible_strategies = \
-            np.array([[1, 0, 1, 0],
-                      [1, 0, 0, 1],
-                      [0, 1, 1, 0],
-                      [0, 1, 0, 1]])
-
         self.timers = dict()
         for i in ["choose", "teach"]:
 
@@ -48,7 +42,6 @@ class RLAgentsManager(object):
 
         for i in range(self.n):
             self.agents[i] = self.model()
-            self.agents[i].set_possible_strategies(self.possible_strategies)
 
     def have_agents_choose(self, decision_array):
 
