@@ -181,7 +181,7 @@ class ParametersGenerator(object):
         # print("Script created.")
 
         content = "# !/usr/bin/env bash\n" \
-                  "for i in {0..%d}; do\nqsub ecoBGModel-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
+                  "for i in {0..%d}; do\nqsub ../scripts/ecoBGModel-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
 
         f = open("{}/meta_launcher.sh".format(self.folders["scripts"]), 'w')
         f.write(content)
