@@ -2,7 +2,7 @@ import numpy as np
 from time import sleep
 from tqdm import tqdm
 from pylab import plt
-from BGModel import Model
+from module.BGModel import Model
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
     results_mot = []
     results_cog = []
 
-    t_max = 1000
+    t_max = 500
 
     for i in tqdm(range(t_max)):
 
@@ -67,11 +67,13 @@ def plot(mot_results):
         else:
             average_t[t] = np.mean(bool_mot_results[t-10:t+1])
 
-    plt.plot(np.arange(t_max), average_t, linewidth=2)
-    plt.ylim([-0.01, 1.01])
-    plt.show()
-
-
+    try:
+        plt.plot(np.arange(t_max), average_t, linewidth=2)
+        plt.ylim([-0.01, 1.01])
+        plt.show("figure.pdf")
+    except:
+        print("Could not show the figure but here are the results:")
+        print(average_t)
 
 
 if __name__ == "__main__":

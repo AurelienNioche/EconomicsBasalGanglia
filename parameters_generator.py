@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 from datetime import datetime 
-from os import path, mkdir
+from os import path, mkdir, popen
 from collections import OrderedDict
 import re
 
@@ -31,17 +31,25 @@ class ParametersGenerator(object):
     
         self.date = date()
 
-        root_folder = "../../data"
+        root_folder = "../data"
 
         self.folders = OrderedDict(
             [
+                ("macro", "server"),
                 ("root", root_folder),
                 ("parameters", "{}/input_parameters".format(root_folder)),
-                ("session", "{}/session".format(root_folder))
+                ("session", "{}/session".format(root_folder)),
+                ("scripts", "{}/scripts".format(root_folder))
             ]
         )
 
         self.nb_sub_list = None
+
+    def empty_scripts_folder(self):
+
+        if path.exists(self.folders["scripts"]):
+
+            popen("rm -r -f {}".format(self.folders["scripts"]))
 
     def create_folders(self):
 
@@ -111,8 +119,8 @@ class ParametersGenerator(object):
 
         print("Create scripts...")
 
-        root_file = "simulation.sh"
-        prefix_output_file = "{}/ecoBG-simulation_".format(self.folders["session"])
+        root_file = "{}/simulation.sh".format(self.folders["macro"])
+        prefix_output_file = "{}/ecoBG-simulation_".format(self.folders["scripts"])
 
         for i in range(self.nb_sub_list):
             f = open(root_file, 'r')
@@ -135,7 +143,7 @@ class ParametersGenerator(object):
         content = "# !/usr/bin/env bash\n" \
                   "for i in {0..%d}; do\nqsub ecoBG-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
 
-        f = open("{}/meta_launcher.sh".format(self.folders["session"]), 'w')
+        f = open("{}/meta_launcher.sh".format(self.folders["scripts"]), 'w')
         f.write(content)
         f.close()
 
@@ -143,26 +151,23 @@ class ParametersGenerator(object):
     
     def run(self):
 
-        self.create_folders()
-
         workforce_list = self.generate_workforce_list()
-
         parameters_list, suffixes_list = self.generate_parameters_list(workforce_list=workforce_list)
-
         self.nb_sub_list = len(parameters_list)
 
         response = input("Number of tasks: {}. Should I proceed?".format(self.nb_sub_list))
-        while response not in ['y', 'yes', 'n', 'no']:
+        while response not in ['y', 'yes', 'n', 'no', 'Y', 'N']:
             response = input("You can only respond by 'yes' or 'no'.\n"
                              "Number of tasks: {}. Should I proceed?".format(self.nb_sub_list))
 
-        if response in ['y', 'yes']:
+        if response in ['y', 'yes', 'Y']:
 
             print("Proceeding...")
+
+            self.empty_scripts_folder()
+            self.create_folders()
             self.save_parameters_list(parameters_list, suffixes_list)
-
             self.create_scripts()
-
             self.create_meta_launcher()
 
             print("Done!")
