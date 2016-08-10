@@ -20,7 +20,7 @@ class ParametersGenerator(object):
 
         self.workforce_step = 25
         self.workforce_mini = 50
-        self.workforce_maxi = 200
+        self.workforce_maxi = 1000
     
         self.date = date()
 
@@ -68,12 +68,15 @@ class ParametersGenerator(object):
         workforce_list = list()
 
         possible_w = np.arange(self.workforce_mini, self.workforce_maxi+0.1, self.workforce_step)
+        # for i in possible_w:
+        #     for j in possible_w:
+        #         for k in possible_w:
+        #             if i <= j <= k:
+        #                 array[:] = i, j, k
+        #                 workforce_list.append(array.copy())
         for i in possible_w:
-            for j in possible_w:
-                for k in possible_w:
-                    if i <= j <= k:
-                        array[:] = i, j, k
-                        workforce_list.append(array.copy())
+            array[2] = i
+            workforce_list.append(array.copy())
 
         print("Length of workforce list:", len(workforce_list))
         return workforce_list

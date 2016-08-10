@@ -1,25 +1,86 @@
 import pickle
 from pylab import np, plt
+from os import listdir, mkdir
+from os.path import isfile, join, exists
+from tqdm import tqdm
 
 
-def simple_analysis(results_folder, session_suffix):
+class DataImporter(object):
 
-    parameters = pickle.load(open("{}/parameters/parameters_{}.p".format(results_folder, session_suffix), mode='rb'))
-    print("parameters", parameters)
+    def __init__(self, data_folder):
 
-    data = pickle.load(open("{}/exchanges/indirect_exchanges_{}.p".format(results_folder, session_suffix), mode='rb'))
+        assert exists(data_folder), "Wrong name for data folder..."
 
-    x = np.arange(len(data[:]))
+        self.folder = {
+            "parameters": "{}/parameters".format(data_folder),
+            "exchanges": "{}/exchanges".format(data_folder)
+        }
 
-    plt.plot(x, data[:, 0], c="red", linewidth=2)
-    plt.plot(x, data[:, 1], c="blue", linewidth=2)
-    plt.plot(x, data[:, 2], c="green", linewidth=2)
-    plt.ylim([-0.01, 1.01])
+    def import_suffix_list(self):
 
-    plt.show()
+        mypath = self.folder["parameters"]
+        onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        suffixes = [f.split("parameters_")[1] for f in onlyfiles]
+        return suffixes
+
+    def import_data_for_single_session(self, session_suffix):
+
+        parameters = pickle.load(
+            open("{}/parameters_{}".format(self.folder["parameters"], session_suffix), mode='rb'))
+        # print("parameters", parameters)
+
+        indirect_exchanges = pickle.load(
+            open("{}/indirect_exchanges_{}".format(self.folder["exchanges"], session_suffix), mode='rb'))
+
+        direct_exchanges = pickle.load(
+            open("{}/direct_exchanges_{}".format(self.folder["exchanges"], session_suffix), mode='rb'))
+
+        return {"parameters": parameters, "indirect_exchanges": indirect_exchanges,
+                "direct_exchanges": direct_exchanges}
+
+
+class Analysis(object):
+
+    @classmethod
+    def simple_analysis(cls, indirect_exchange, msg="", suffix=""):
+
+        cls.plot(indirect_exchange, msg=msg, suffix=suffix)
+
+    @classmethod
+    def plot(cls, data, msg="", suffix=""):
+
+        x = np.arange(len(data[:]))
+
+        plt.plot(x, data[:, 0], c="red", linewidth=2)
+        plt.plot(x, data[:, 1], c="blue", linewidth=2)
+        plt.plot(x, data[:, 2], c="green", linewidth=2)
+        plt.ylim([-0.01, 1.01])
+        plt.text(0, 0, "{}".format(msg))
+
+        figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures"
+        if not exists(figure_folder):
+            mkdir(figure_folder)
+        fig_name = "{}/figure_{}.pdf".format(figure_folder, suffix.split(".p")[0])
+        plt.savefig(fig_name)
+        plt.close()
+
+
+def main():
+
+    data_importer = DataImporter("/users/M-E4-ANIOCHE/Desktop/data")
+
+    suffixes = data_importer.import_suffix_list()
+
+    for suffix in tqdm(suffixes):
+
+        data = data_importer.import_data_for_single_session(suffix)
+        msg = "Workforce: {}, t_max: {}".format(data["parameters"]["workforce"], data["parameters"]["t_max"])
+
+        Analysis.simple_analysis(data["indirect_exchanges"], msg=msg, suffix=suffix)
 
 
 if __name__ == "__main__":
 
-    simple_analysis(results_folder="../data", session_suffix="example_idx0")
+    # Analysis.simple_analysis(results_folder="../data", session_suffix="example_idx0")
+    main()
 

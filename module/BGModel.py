@@ -9,7 +9,7 @@ from module.cdana.cdana import *
 
 
 class Model(object):
-    def __init__(self, filename="model-topalidou.json"):
+    def __init__(self, filename="model-topalidou-august-parameters.json"):
         self.filename = filename
         with open(os.path.join(os.path.dirname(__file__), filename)) as f:
             self.parameters = json.load(f)
