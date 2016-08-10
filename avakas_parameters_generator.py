@@ -16,11 +16,11 @@ class ParametersGenerator(object):
 
     def __init__(self):
 
-        self.t_max = 5000
+        self.t_max = 2000
 
         self.workforce_step = 25
         self.workforce_mini = 50
-        self.workforce_maxi = 300
+        self.workforce_maxi = 200
     
         self.date = date()
 
