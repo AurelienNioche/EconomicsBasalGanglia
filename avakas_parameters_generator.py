@@ -24,15 +24,16 @@ class ParametersGenerator(object):
     
         self.date = date()
 
-        root_folder = "../data"
+        data_folder = "../data"
 
         self.folders = OrderedDict(
             [
                 ("macro", "server"),
-                ("scripts", "../scripts"),
-                ("root", root_folder),
-                ("parameters", "{}/input_parameters".format(root_folder)),
-                ("session", "{}/session".format(root_folder)),
+                ("scripts", "../avakas_scripts"),
+                ("parameters", "../avakas_input_parameters"),
+                ("logs", "../avakas_logs"),
+                ("data", data_folder),
+                ("session", "{}/session_suffixes".format(data_folder)),
             ]
         )
 
@@ -40,9 +41,17 @@ class ParametersGenerator(object):
 
     def empty_scripts_folder(self):
 
+        print("Remove old scripts and logs...")
+
         if path.exists(self.folders["scripts"]):
 
             shutil.rmtree(self.folders["scripts"])
+
+        print("Old scripts and logs have been removed.")
+
+        if path.exists(self.folders["logs"]):
+
+            shutil.rmtree(self.folders["logs"])
 
     def create_folders(self):
 

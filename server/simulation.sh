@@ -5,9 +5,9 @@
 #PBS -N ecoBG-simulation_0
 
 #change output file's name 
-#PBS -e /home/anioche/aurelien/.log/ecoBG-simulation_0.err
+#PBS -e /home/anioche/aurelien/ecoBGModel-master/avakas_logs/ecoBG-simulation_0.err
 
-#PBS -o /home/anioche/aurelien/.log/ecoBG-simulation_0.log
+#PBS -o /home/anioche/aurelien/ecoBGModel-master/avakas_logs/ecoBG-simulation_0.log
 
 
 # Specify the working directory
@@ -47,10 +47,10 @@ echo "#############################"
 
 # What you actually want to launch
 echo "Start the job"
-echo main.py ~/aurelien/EcoBGModel-master/data/input_parameters/slice_0.p
+echo main.py ~/aurelien/EcoBGModel-master/avakas_input_parameters/slice_0.p
 
 # launch python script with pickle object for parameters
-python main.py ~/aurelien/EcoBGModel-master/data/input_parameters/slice_0.p
+python main.py ~/aurelien/EcoBGModel-master/avakas_input_parameters/slice_0.p
 
 # all done
 echo "Job finished"
