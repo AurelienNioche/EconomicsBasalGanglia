@@ -1,4 +1,4 @@
-from subprocess import check_output
+from subprocess import check_output, CalledProcessError
 import argparse
 
 
@@ -17,8 +17,10 @@ def kill_job():
     end_job = args.end
 
     for i in range(begin_job, end_job+1):
-
-        print(check_output("qdel {}".format(i).split(" ")))
+        try:
+            print(check_output("qdel {}".format(i).split(" ")))
+        except CalledProcessError as e:
+            print(e)
 
 if __name__ == "__main__":
 
