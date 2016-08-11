@@ -9,7 +9,7 @@ def simple_run():
     t_max = 10000
     model = "BG"
 
-    root_folder = "../../single_shot_data"
+    root_folder = "../single_shot_data"
 
     param = \
         {
