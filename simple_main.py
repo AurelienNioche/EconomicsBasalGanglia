@@ -1,15 +1,27 @@
 import numpy as np
 from multiprocessing import cpu_count
+from os.path import exists
+from os import mkdir
 from module.SimulationManager import Launcher
 from module.save_eco import BackUp
 
 
-def simple_run():
+def simple_run(logs=True):
 
     t_max = 10000
     model = "BG"
 
     root_folder = "../single_shot_data"
+
+    if not exists(root_folder):
+
+        mkdir(root_folder)
+
+    if logs:
+
+        logs_folder = "../single_shot_logs"
+        if not exists(logs_folder):
+            mkdir(logs_folder)
 
     param = \
         {

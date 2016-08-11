@@ -5,9 +5,9 @@
 #PBS -N ecoBGModel-singleShot
 
 #change output file's name
-#PBS -e /home/anioche/aurelien/EcoBGModel-master/avakas_logs/ecoBGModel-singleShot.err
+#PBS -e /home/anioche/aurelien/EcoBGModel-master/single_shot_logs/ecoBGModel-singleShot.err
 
-#PBS -o /home/anioche/aurelien/EcoBGModel-master/avakas_logs/ecoBG-singleShot.log
+#PBS -o /home/anioche/aurelien/EcoBGModel-master/single_shot_logs/ecoBG-singleShot.log
 
 
 # Specify the working directory
