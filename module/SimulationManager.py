@@ -106,7 +106,7 @@ class Launcher(object):
 
 def simple_run():
 
-    t_max = 1000
+    t_max = 10000
     model = "BG"
 
     param = \
@@ -120,7 +120,7 @@ def simple_run():
         }
 
     results = Launcher.launch(param)
-    BackUp.save_data(results=results, parameters=param, root_folder="../../data")
+    BackUp.save_data(results=results, parameters=param, root_folder="../../example_data")
 
 
 if __name__ == "__main__":

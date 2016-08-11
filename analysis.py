@@ -42,12 +42,12 @@ class DataImporter(object):
 class Analysis(object):
 
     @classmethod
-    def simple_analysis(cls, indirect_exchange, msg="", suffix=""):
+    def simple_analysis(cls, indirect_exchange, figure_folder, msg="", suffix=""):
 
-        cls.plot(indirect_exchange, msg=msg, suffix=suffix)
+        cls.plot(indirect_exchange, figure_folder, msg=msg, suffix=suffix)
 
     @classmethod
-    def plot(cls, data, msg="", suffix=""):
+    def plot(cls, data, figure_folder, msg="", suffix=""):
 
         x = np.arange(len(data[:]))
 
@@ -57,7 +57,6 @@ class Analysis(object):
         plt.ylim([-0.01, 1.01])
         plt.text(0, 0, "{}".format(msg))
 
-        figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures"
         if not exists(figure_folder):
             mkdir(figure_folder)
         fig_name = "{}/figure_{}.pdf".format(figure_folder, suffix.split(".p")[0])
@@ -67,7 +66,10 @@ class Analysis(object):
 
 def main():
 
-    data_importer = DataImporter("/users/M-E4-ANIOCHE/Desktop/data")
+    data_folder = "/users/M-E4-ANIOCHE/Desktop/data-batch3"
+    figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures-batch3"
+
+    data_importer = DataImporter(data_folder=data_folder)
 
     suffixes = data_importer.import_suffix_list()
 
@@ -76,7 +78,7 @@ def main():
         data = data_importer.import_data_for_single_session(suffix)
         msg = "Workforce: {}, t_max: {}".format(data["parameters"]["workforce"], data["parameters"]["t_max"])
 
-        Analysis.simple_analysis(data["indirect_exchanges"], msg=msg, suffix=suffix)
+        Analysis.simple_analysis(data["indirect_exchanges"], figure_folder=figure_folder, msg=msg, suffix=suffix)
 
 
 if __name__ == "__main__":
