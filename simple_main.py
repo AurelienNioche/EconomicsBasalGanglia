@@ -23,3 +23,8 @@ def simple_run():
 
     results = Launcher.launch(param)
     BackUp.save_data(results=results, parameters=param, root_folder=root_folder)
+
+
+if __name__ == "__main__":
+
+    simple_run()
