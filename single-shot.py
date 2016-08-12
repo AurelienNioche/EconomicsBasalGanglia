@@ -14,8 +14,8 @@ def date():
 
 def simple_run(logs=True):
 
-    t_max = 1000
-    workforce = np.array([5, 5, 10], dtype=int)
+    t_max = 10000
+    workforce = np.array([50, 50, 100], dtype=int)
     model = "BG"
     model_parameters = "model-topalidou-august-parameters.json"
 
@@ -43,10 +43,10 @@ def simple_run(logs=True):
             "idx": np.random.randint(99999)
         }
 
-    results = Launcher.launch(param)
+    results = Launcher.launch(param, single=False)
     BackUp.save_data(results=results, parameters=param, root_folder=root_folder)
 
 
 if __name__ == "__main__":
 
-    simple_run(logs=False)
+    simple_run(logs=True)
