@@ -1,7 +1,7 @@
 import argparse
 import pickle
 import sys
-from module.SimulationManager import Launcher
+from module.simulation_manager import Launcher
 from module.save_eco import BackUp
 
 
@@ -18,7 +18,7 @@ def get_parameters():
     try:
         parameters = pickle.load(open(pickle_file, mode='rb'))
     except Exception as e:
-        print("Problemns in loading", pickle_file)
+        print("Problems in loading", pickle_file)
         raise e
 
     return parameters

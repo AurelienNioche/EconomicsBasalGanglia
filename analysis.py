@@ -66,8 +66,8 @@ class Analysis(object):
 
 def main():
 
-    data_folder = "/users/M-E4-ANIOCHE/Desktop/data-batch3"
-    figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures-batch3"
+    data_folder = "/users/M-E4-ANIOCHE/Desktop/single-shot-data"
+    figure_folder = "/users/M-E4-ANIOCHE/Desktop/single-shot-figures"
 
     data_importer = DataImporter(data_folder=data_folder)
 

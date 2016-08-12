@@ -16,12 +16,12 @@ class ParametersGenerator(object):
 
     def __init__(self):
 
-        self.t_max = 2000
+        self.t_max = 10000
 
-        self.workforce_step = 25
-        self.workforce_mini = 50
-        self.workforce_maxi = 1000
-    
+        self.model_parameters = "model-topalidou-august-parameters"
+
+        self.n_cpu = 12
+
         self.date = date()
 
         data_folder = "../data"
@@ -60,23 +60,40 @@ class ParametersGenerator(object):
             if not path.exists(directory):
                 mkdir(directory)
 
-    def generate_workforce_list(self):
-
-        array = np.zeros(3)
-        array[:] = self.workforce_mini
+    @classmethod
+    def generate_workforce_list(cls):
 
         workforce_list = list()
+        workforce = np.zeros(3, dtype=int)
 
-        possible_w = np.arange(self.workforce_mini, self.workforce_maxi+0.1, self.workforce_step)
+        workforce_step = 25
+        workforce_mini = 50
+        workforce_maxi = 200
+
+        workforce[:] = workforce_mini
+
+        possible_w = np.arange(workforce_mini, workforce_maxi+0.1, workforce_step)
+        for i in possible_w:
+            workforce[2] = i
+            workforce_list.append(workforce.copy())
+
+        workforce_step = 50
+        workforce_mini = 100
+        workforce_maxi = 400
+
+        workforce[:] = workforce_mini
+
+        possible_w = np.arange(workforce_mini, workforce_maxi+0.1, workforce_step)
+        for i in possible_w:
+            workforce[2] = i
+            workforce_list.append(workforce.copy())
+
         # for i in possible_w:
         #     for j in possible_w:
         #         for k in possible_w:
         #             if i <= j <= k:
         #                 array[:] = i, j, k
         #                 workforce_list.append(array.copy())
-        for i in possible_w:
-            array[2] = i
-            workforce_list.append(array.copy())
 
         print("Length of workforce list:", len(workforce_list))
         return workforce_list
@@ -91,10 +108,11 @@ class ParametersGenerator(object):
 
             parameters = \
                 {
-                    "workforce": np.array(workforce, dtype=int),
+                    "workforce": workforce,
                     "t_max": self.t_max,  # Set the number of time units the simulation will run
                     "model": "BG",
-                    "cpu_count": 12,
+                    "model_parameters": self.model_parameters,
+                    "cpu_count": self.n_cpu,
                     "idx": idx,  # For saving
                     "date": self.date  # For saving
 
@@ -166,7 +184,7 @@ class ParametersGenerator(object):
         print("Create scripts...")
 
         root_file = "{}/simulation.sh".format(self.folders["macro"])
-        prefix_output_file = "{}/ecoBG-simulation_".format(self.folders["scripts"])
+        prefix_output_file = "{}/ecoBGModel-simulation_".format(self.folders["scripts"])
 
         for i in range(self.nb_sub_list):
             f = open(root_file, 'r')
@@ -174,7 +192,7 @@ class ParametersGenerator(object):
             f.close()
 
             replaced = re.sub('slice_0', 'slice_{}'.format(i), content)
-            replaced = re.sub('ecoBG-simulation_0', 'ecoBG-simulation_{}'.format(i), replaced)
+            replaced = re.sub('ecoBG-simulation_0', 'ecoBGModel-simulation_{}'.format(i), replaced)
 
             script_name = "{}{}.sh".format(prefix_output_file, i)
 
@@ -186,6 +204,8 @@ class ParametersGenerator(object):
 
     def create_meta_launcher(self):
 
+        # !!!!!! MAYBE USELESS
+
         # print("Create launch script...")
         #
         # pickle.dump(script_names,
@@ -194,7 +214,7 @@ class ParametersGenerator(object):
         # print("Script created.")
 
         content = "# !/usr/bin/env bash\n" \
-                  "for i in {0..%d}; do\nqsub ecoBG-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
+                  "for i in {0..%d}; do\nqsub ecoBGModel-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
 
         f = open("{}/meta_launcher.sh".format(self.folders["scripts"]), 'w')
         f.write(content)
@@ -221,7 +241,7 @@ class ParametersGenerator(object):
             self.create_folders()
             self.save_input_parameters(input_parameters, suffixes_list)
             self.create_scripts()
-            self.create_meta_launcher()
+            # self.create_meta_launcher()
 
             print("Done!")
 

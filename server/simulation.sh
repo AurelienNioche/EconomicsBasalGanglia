@@ -2,19 +2,19 @@
 
 #############################
 # Your job name (displayed by the queue)
-#PBS -N ecoBG-simulation_0
+#PBS -N ecoBGModel-simulation_0
 
 #change output file's name 
-#PBS -e /home/anioche/aurelien/EcoBGModel-master/avakas_logs/ecoBG-simulation_0.err
+#PBS -e /home/anioche/aurelien/EcoBGModel-master/avakas_logs/ecoBGModel-simulation_0.err
 
-#PBS -o /home/anioche/aurelien/EcoBGModel-master/avakas_logs/ecoBG-simulation_0.log
+#PBS -o /home/anioche/aurelien/EcoBGModel-master/avakas_logs/ecoBGModel-simulation_0.log
 
 
 # Specify the working directory
 #PBS -d /home/anioche/aurelien/EcoBGModel-master/EcoBGModel
 
 # walltime (hh:mm::ss)
-#PBS -l walltime=10:00:00
+#PBS -l walltime=20:00:00
 
 # Specify the number of nodes(nodes=) and the number of cores per nodes(ppn=) to be used
 #PBS -l nodes=1:ppn=6

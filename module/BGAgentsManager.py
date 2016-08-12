@@ -13,6 +13,7 @@ class EcoProcess(Process):
         self.demand_queue = kwargs["demand_queue"]
         self.result_queue = kwargs["result_queue"]
         self.stop = kwargs["stop"]
+        self.model_parameters = kwargs["model_parameters"]
         self.n = kwargs["n"]
         self.possible_strategies = \
             np.array([[1., 0., 1., 0.],
@@ -85,6 +86,8 @@ class BGAgentsManager(object):
 
         self.model = BGModel
 
+        self.model_parameters = parameters["model_parameters"]
+
         self.n = np.sum(parameters["workforce"])  # Total number of agents
 
         self.n_workers = parameters["cpu_count"]
@@ -134,6 +137,7 @@ class BGAgentsManager(object):
             p = EcoProcess(demand_queue=self.demand_queues[i],
                            result_queue=self.result_queues[i],
                            stop=self.stop_signal,
+                           model_parameters=self.model_parameters,
                            n=n)
             p.start()
 

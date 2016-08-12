@@ -2,14 +2,22 @@ import numpy as np
 from multiprocessing import cpu_count
 from os.path import exists
 from os import mkdir
-from module.SimulationManager import Launcher
+from datetime import datetime
+from module.simulation_manager import Launcher
 from module.save_eco import BackUp
+
+
+def date():
+
+    return str(datetime.now())[:-10].replace(" ", "_").replace(":", "-")
 
 
 def simple_run(logs=True):
 
     t_max = 10000
+    workforce = np.array([10, 10, 20], dtype=int)
     model = "BG"
+    model_parameters = "model-topalidou-august-parameters.json"
 
     root_folder = "../single_shot_data"
 
@@ -25,12 +33,13 @@ def simple_run(logs=True):
 
     param = \
         {
-            "workforce": np.array([50, 50, 100], dtype=int),
+            "workforce": workforce,
             "t_max": t_max,  # Set the number of time units the simulation will run.
-            "cpu_count": 12,
+            "cpu_count": cpu_count(),
             "model": model,
-            "date": "example",
-            "idx": 0
+            "model_parameters": model_parameters,
+            "date": date(),
+            "idx": np.random.randint(99999)
         }
 
     results = Launcher.launch(param)
@@ -39,4 +48,4 @@ def simple_run(logs=True):
 
 if __name__ == "__main__":
 
-    simple_run()
+    simple_run(logs=False)
