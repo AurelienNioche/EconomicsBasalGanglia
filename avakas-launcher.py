@@ -17,7 +17,7 @@ class AvakasLauncher(object):
 
         mypath = self.folder["script"]
         onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-        script_names = [f for f in onlyfiles if f[:3] == ".sh"]
+        script_names = [f for f in onlyfiles if f[-3:] == ".sh"]
 
         return script_names
 
@@ -50,6 +50,7 @@ class AvakasLauncher(object):
     def run(self):
 
         script_names = self.load_scripts()
+        assert len(script_names) > 0, "Can't find any script to launch."
         job_names = self.launch_jobs(script_names)
         self.save_job_names(job_names)
 
