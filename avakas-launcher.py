@@ -36,14 +36,14 @@ class AvakasLauncher(object):
             print("Launch script '{}'...".format(script_name))
 
             output = subprocess.check_output("qsub {}/{}".format(self.folder["script"], script_name).split())
-            # output = subprocess.check_output("qsub {}".format(script_name.split("../scripts/")[1]).split())
+
+            output = str(output).split(".")[0] # Remove the \n at the end
 
             print("System answers '{}'.".format(output))
-            job_names.append(str(output).split(".")[0])  # Remove the \n at the end
 
-        print("Come back to python 3.5.2")
-        output = subprocess.check_output("pyenv local 3.5.2".split())
-        print(output)
+            print()
+
+            job_names.append(output)  # Remove the \n at the end
 
         return job_names
 
