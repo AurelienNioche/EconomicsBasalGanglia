@@ -14,6 +14,7 @@ class EcoProcess(Process):
         self.result_queue = kwargs["result_queue"]
         self.stop = kwargs["stop"]
         self.model_parameters = kwargs["model_parameters"]
+        self.hebbian = kwargs["hebbian"]
         self.n = kwargs["n"]
         self.possible_strategies = \
             np.array([[1., 0., 1., 0.],
@@ -74,7 +75,8 @@ class EcoProcess(Process):
 
         for i in range(self.n):
 
-            model = BGModel()
+            model = BGModel(filename=self.model_parameters,
+                            hebbian=self.hebbian)
             agents.append(model)
 
         return agents
@@ -87,6 +89,7 @@ class BGAgentsManager(object):
         self.model = BGModel
 
         self.model_parameters = parameters["model_parameters"]
+        self.hebbian = parameters["hebbian"]
 
         self.n = np.sum(parameters["workforce"])  # Total number of agents
 
@@ -138,6 +141,7 @@ class BGAgentsManager(object):
                            result_queue=self.result_queues[i],
                            stop=self.stop_signal,
                            model_parameters=self.model_parameters,
+                           hebbian=self.hebbian,
                            n=n)
             p.start()
 

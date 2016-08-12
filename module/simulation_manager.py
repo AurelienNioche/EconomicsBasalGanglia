@@ -102,27 +102,3 @@ class Launcher(object):
         ############################
         #   End of the program     #
         ############################
-
-
-def simple_run():
-
-    t_max = 10000
-    model = "BG"
-
-    param = \
-        {
-            "workforce": np.array([50, 50, 100], dtype=int),
-            "t_max": t_max,  # Set the number of time units the simulation will run.
-            "cpu_count": cpu_count(),
-            "model": model,
-            "date": "example",
-            "idx": 0
-        }
-
-    results = Launcher.launch(param)
-    BackUp.save_data(results=results, parameters=param, root_folder="../../example_data")
-
-
-if __name__ == "__main__":
-
-    simple_run()

@@ -9,8 +9,12 @@ from module.cdana.cdana import *
 
 
 class Model(object):
-    def __init__(self, filename="model-topalidou-august-parameters.json"):
+    def __init__(self, hebbian=False, filename="model-topalidou-august-parameters.json"):
+
         self.filename = filename
+
+        self.hebbian = hebbian
+
         with open(os.path.join(os.path.dirname(__file__), filename)) as f:
             self.parameters = json.load(f)
         np.random.seed()
@@ -241,11 +245,12 @@ class Model(object):
         W = self["CTX:cog -> STR:cog"].weights
         W[choice] += dw * (Wmax - W[choice]) * (W[choice] - Wmin)
 
-        # # Hebbian learning
-        # # This is the chosen cue by the model (may be different from the actual cue)
-        # cue = np.argmax(self["CTX"]["cog"]["U"])
+        if self.hebbian:
 
-        # LTP   = _["Hebbian"]["LTP"]
-        # dw = LTP * self["CTX"]["cog"]["V"][cue]
-        # W = self["CTX:cog -> CTX:ass"].weights
-        # W[cue] += dw * (Wmax-W[cue])*(W[cue]-Wmin)
+            # # Hebbian learning
+            # # This is the chosen cue by the model (may be different from the actual cue)
+
+            LTP = _["Hebbian"]["LTP"]
+            dw = LTP * self["CTX"]["cog"]["V"][choice]
+            W = self["CTX:cog -> CTX:ass"].weights
+            W[choice] += dw * (Wmax-W[choice])*(W[choice]-Wmin)

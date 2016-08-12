@@ -19,6 +19,7 @@ class ParametersGenerator(object):
         self.t_max = 10000
 
         self.model_parameters = "model-topalidou-august-parameters"
+        self.hebbian = False
 
         self.n_cpu = 12
 
@@ -112,6 +113,7 @@ class ParametersGenerator(object):
                     "t_max": self.t_max,  # Set the number of time units the simulation will run
                     "model": "BG",
                     "model_parameters": self.model_parameters,
+                    "hebbian": self.hebbian,
                     "cpu_count": self.n_cpu,
                     "idx": idx,  # For saving
                     "date": self.date  # For saving

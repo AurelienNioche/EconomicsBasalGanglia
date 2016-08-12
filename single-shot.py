@@ -14,8 +14,8 @@ def date():
 
 def simple_run(logs=True):
 
-    t_max = 10000
-    workforce = np.array([10, 10, 20], dtype=int)
+    t_max = 1000
+    workforce = np.array([5, 5, 10], dtype=int)
     model = "BG"
     model_parameters = "model-topalidou-august-parameters.json"
 
@@ -38,6 +38,7 @@ def simple_run(logs=True):
             "cpu_count": cpu_count(),
             "model": model,
             "model_parameters": model_parameters,
+            "hebbian": True,
             "date": date(),
             "idx": np.random.randint(99999)
         }
