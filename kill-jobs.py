@@ -1,27 +1,49 @@
 from subprocess import check_output, CalledProcessError
-import argparse
+import json
 
 
-def kill_job():
-    parser = argparse.ArgumentParser()
+class JobKiller(object):
 
-    parser.add_argument('begin', type=int,
-                        help='The number of the first job of the list to kill is required')
+    def __init__(self):
 
-    parser.add_argument('end', type=int,
-                        help='The number of the second job of the list to kill is required')
+        self.folder = {
+            "job_names": ".."
+        }
 
-    args = parser.parse_args()
+    def load_job_names(self):
 
-    begin_job = args.begin
-    end_job = args.end
+        with open("{}/job_names.json".format(self.folder["job_names"]), "r") as f:
+            job_names = json.load(f)
 
-    for i in range(begin_job, end_job+1):
-        try:
-            print(check_output("qdel {}".format(i).split(" ")))
-        except CalledProcessError as e:
-            print(e)
+        return job_names
+
+    @classmethod
+    def kill_jobs(cls, job_names):
+
+        for i in job_names:
+
+            command = "qdel {}".format(i)
+            print("Ask system '{}'".format(command))
+
+            try:
+                output = check_output(command.split())
+                output = str(output)[:-2]  # [:-2] is for removing the \n at the end
+                print("System answers '{}'".format(output))
+
+            except CalledProcessError as e:
+                print(e)
+
+    def run(self):
+
+        job_names = self.load_job_names()
+        self.kill_jobs(job_names)
+
+
+def main():
+
+    j = JobKiller()
+    j.run()
 
 if __name__ == "__main__":
 
-    kill_job()
+    main()

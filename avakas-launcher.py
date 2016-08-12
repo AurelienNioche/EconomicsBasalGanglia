@@ -37,13 +37,11 @@ class AvakasLauncher(object):
 
             output = subprocess.check_output("qsub {}/{}".format(self.folder["script"], script_name).split())
 
-            output = str(output).split(".")[0] # Remove the \n at the end
-
-            print("System answers '{}'.".format(output))
+            print("System answers '{}'.".format(str(output)[:-2]))  # [:-2] is for removing the \n at the end
 
             print()
 
-            job_names.append(output)  # Remove the \n at the end
+            job_names.append(str(output).split(".")[0])  # Keep just the number of the job as ID
 
         return job_names
 
