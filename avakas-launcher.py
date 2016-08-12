@@ -23,7 +23,7 @@ class AvakasLauncher(object):
 
     def save_job_names(self, job_names):
 
-        with open('{}/job_names.json'.format(self.folder["job_names"]), 'w', encoding='utf-8') as f:
+        with open('{}/job_names.json'.format(self.folder["job_names"]), 'w') as f:
 
             json.dump(job_names, f, indent=4)
 

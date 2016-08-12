@@ -206,13 +206,6 @@ class ParametersGenerator(object):
 
         # !!!!!! MAYBE USELESS
 
-        # print("Create launch script...")
-        #
-        # pickle.dump(script_names,
-        #             open("{}/avakas_launcher_args.p".format(self.folders["scripts"]), mode='wb'))
-        #
-        # print("Script created.")
-
         content = "# !/usr/bin/env bash\n" \
                   "for i in {0..%d}; do\nqsub ecoBGModel-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
 
