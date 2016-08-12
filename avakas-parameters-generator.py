@@ -194,7 +194,7 @@ class ParametersGenerator(object):
             f.close()
 
             replaced = re.sub('slice_0', 'slice_{}'.format(i), content)
-            replaced = re.sub('ecoBG-simulation_0', 'ecoBGModel-simulation_{}'.format(i), replaced)
+            replaced = re.sub('ecoBGModel-simulation_0', 'ecoBGModel-simulation_{}'.format(i), replaced)
 
             script_name = "{}{}.sh".format(prefix_output_file, i)
 
