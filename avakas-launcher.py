@@ -35,8 +35,8 @@ class AvakasLauncher(object):
 
             print("Launch script '{}'...".format(script_name))
 
-            # output = subprocess.check_output("qsub {}/{}".format(self.folder["script"], script_name).split())
-            output = subprocess.check_output("qsub {}".format(script_name.split("../scripts/")[1]).split())
+            output = subprocess.check_output("qsub {}/{}".format(self.folder["script"], script_name).split())
+            # output = subprocess.check_output("qsub {}".format(script_name.split("../scripts/")[1]).split())
 
             print("System answers '{}'.".format(output))
             job_names.append(str(output).split(".")[0])  # Remove the \n at the end
