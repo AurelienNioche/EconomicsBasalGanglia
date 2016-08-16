@@ -14,10 +14,10 @@ def date():
 
 def simple_run(logs=True):
 
-    t_max = 20000
+    t_max = 2000
     workforce = np.array([50, 50, 100], dtype=int)
     model = "BG"
-    model_parameters = "model-topalidou-august-parameters.json"
+    model_parameters = "economics-model-parameters.json"
 
     root_folder = "../single_shot_data"
 

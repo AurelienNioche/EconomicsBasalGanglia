@@ -18,14 +18,12 @@ class ParametersGenerator(object):
 
         self.t_max = 10000
 
-        self.model_parameters = "model-topalidou-august-parameters"
+        self.model_parameters = "economics-model-parameters.json"
         self.hebbian = False
 
         self.n_cpu = 12
 
         self.date = date()
-
-        data_folder = "../data"
 
         self.folders = OrderedDict(
             [
@@ -33,14 +31,28 @@ class ParametersGenerator(object):
                 ("scripts", "../avakas_scripts"),
                 ("parameters", "../avakas_input_parameters"),
                 ("logs", "../avakas_logs"),
-                ("data", data_folder),
-                ("session", "{}/session_suffixes".format(data_folder)),
+                ("data", "../data")
             ]
         )
 
         self.nb_sub_list = 100
 
     def empty_scripts_folder(self):
+
+        if path.exists(self.folders["data"]):
+
+            response = input("Do you want to remove data folder?")
+
+            while response not in ['y', 'yes', 'n', 'no', 'Y', 'N']:
+                response = input("You can only respond by 'yes' or 'no'.")
+
+            if response in ['y', 'yes', 'Y']:
+
+                if path.exists(self.folders["data"]):
+                    shutil.rmtree(self.folders["data"])
+                print("Data folder has been erased.")
+            else:
+                print("Data folder has been conserved.")
 
         print("Remove old scripts and logs...")
 
@@ -103,7 +115,6 @@ class ParametersGenerator(object):
 
         idx = 0
         parameters_list = []
-        suffixes_list = [] 
 
         for workforce in workforce_list:
 
@@ -120,12 +131,10 @@ class ParametersGenerator(object):
 
                 }
             parameters_list.append(parameters)
-            suffixes_list.append("{date}_idx{idx}".format(date=self.date, idx=idx))
-
             # increment idx
             idx += 1
 
-        return parameters_list, suffixes_list
+        return parameters_list
 
     def generate_input_parameters(self, parameters_list):
 
@@ -168,7 +177,7 @@ class ParametersGenerator(object):
 
         return input_parameters_dict, len_sub_part
 
-    def save_input_parameters(self, input_parameters, suffixes_list):
+    def save_input_parameters(self, input_parameters):
 
         print("Save input parameters...")
         
@@ -176,8 +185,6 @@ class ParametersGenerator(object):
 
             pickle.dump(input_parameters[i],
                         open("{}/slice_{}.p".format(self.folders["parameters"], i), mode="wb"))
-
-        pickle.dump(suffixes_list,  open("{}/session_{}.p".format(self.folders["session"], self.date), mode="wb"))
 
         print("Input parameters saved.")
 
@@ -203,22 +210,11 @@ class ParametersGenerator(object):
             f.close()
 
         print("Scripts created.")
-
-    def create_meta_launcher(self):
-
-        # !!!!!! MAYBE USELESS
-
-        content = "# !/usr/bin/env bash\n" \
-                  "for i in {0..%d}; do\nqsub ecoBGModel-simulation_${i}.sh \ndone" % (self.nb_sub_list - 1)
-
-        f = open("{}/meta_launcher.sh".format(self.folders["scripts"]), 'w')
-        f.write(content)
-        f.close()
     
     def run(self):
 
         workforce_list = self.generate_workforce_list()
-        parameters_list, suffixes_list = self.generate_parameters_list(workforce_list=workforce_list)
+        parameters_list = self.generate_parameters_list(workforce_list=workforce_list)
         input_parameters, len_sub_part = self.generate_input_parameters(parameters_list)
 
         response = input("Number of jobs: {}; number of tasks per job: {}; "
@@ -234,7 +230,7 @@ class ParametersGenerator(object):
 
             self.empty_scripts_folder()
             self.create_folders()
-            self.save_input_parameters(input_parameters, suffixes_list)
+            self.save_input_parameters(input_parameters)
             self.create_scripts()
             # self.create_meta_launcher()
 
