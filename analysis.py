@@ -66,11 +66,14 @@ class Analysis(object):
 
 def main():
 
-    single = 0
+    single = 1
     if single:
 
-        data_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_data"
-        figure_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_figures"
+        # data_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_data"
+        # figure_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_figures"
+
+        data_folder = "../single_shot_data"
+        figure_folder = "../single_shot_figures"
 
     else:
 
@@ -86,11 +89,21 @@ def main():
     for suffix in tqdm(suffixes):
 
         data = data_importer.import_data_for_single_session(suffix)
-        msg = "workforce: {}, t_max: {}, hebbian: {}, \nparameters: {}"\
-            .format(data["parameters"]["workforce"],
-                    data["parameters"]["t_max"],
-                    data["parameters"]["hebbian"],
-                    data["parameters"]["model_parameters"])
+
+        try:
+
+            msg = "workforce: {}, t_max: {}, hebbian: {}, \nparameters: {}"\
+                .format(data["parameters"]["workforce"],
+                        data["parameters"]["t_max"],
+                        data["parameters"]["hebbian"],
+                        data["parameters"]["model_parameters"])
+
+        except KeyError:
+
+            msg = "workforce: {}, t_max: {}, \nparameters: {}" \
+                .format(data["parameters"]["workforce"],
+                        data["parameters"]["t_max"],
+                        data["parameters"]["model_parameters"])
 
         Analysis.simple_analysis(data["indirect_exchanges"], figure_folder=figure_folder, msg=msg, suffix=suffix)
 

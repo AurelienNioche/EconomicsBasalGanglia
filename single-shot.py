@@ -3,6 +3,7 @@ from multiprocessing import cpu_count
 from os.path import exists
 from os import mkdir
 from datetime import datetime
+import platform
 from module.simulation_manager import Launcher
 from module.save_eco import BackUp
 
@@ -14,10 +15,11 @@ def date():
 
 def simple_run(logs=True):
 
-    t_max = 2000
+    t_max = 500
     workforce = np.array([50, 50, 100], dtype=int)
     model = "BG"
     model_parameters = "economics-model-parameters.json"
+    hebbian = False
 
     root_folder = "../single_shot_data"
 
@@ -38,15 +40,25 @@ def simple_run(logs=True):
             "cpu_count": cpu_count(),
             "model": model,
             "model_parameters": model_parameters,
-            "hebbian": True,
+            "hebbian": hebbian,
             "date": date(),
             "idx": np.random.randint(99999)
         }
 
-    results = Launcher.launch(param, single=False)
+    if logs:
+        results = Launcher.launch(param, single=False)
+    else:
+        results = Launcher.launch(param, single=True)
+
     BackUp.save_data(results=results, parameters=param, root_folder=root_folder)
 
 
 if __name__ == "__main__":
 
-    simple_run(logs=True)
+    # If on mac platform suppose that no log files are needed
+    if platform == "Darwin":
+
+        simple_run(logs=True)
+    else:
+
+        simple_run(logs=False)
