@@ -55,7 +55,7 @@ class Analysis(object):
         plt.plot(x, data[:, 1], c="blue", linewidth=2)
         plt.plot(x, data[:, 2], c="green", linewidth=2)
         plt.ylim([-0.01, 1.01])
-        plt.text(0, 0, "{}".format(msg))
+        plt.text(0, -0.12, "{}".format(msg))
 
         if not exists(figure_folder):
             mkdir(figure_folder)
@@ -66,8 +66,18 @@ class Analysis(object):
 
 def main():
 
-    data_folder = "/users/M-E4-ANIOCHE/Desktop/data"
-    figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures"
+    single = 0
+    if single:
+
+        data_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_data"
+        figure_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_figures"
+
+    else:
+
+        # data_folder = "/users/M-E4-ANIOCHE/Desktop/data"
+        # figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures"
+        data_folder = "../data-batch4"
+        figure_folder = "../figures-batch4"
 
     data_importer = DataImporter(data_folder=data_folder)
 
@@ -76,7 +86,11 @@ def main():
     for suffix in tqdm(suffixes):
 
         data = data_importer.import_data_for_single_session(suffix)
-        msg = "Workforce: {}, t_max: {}".format(data["parameters"]["workforce"], data["parameters"]["t_max"])
+        msg = "workforce: {}, t_max: {}, hebbian: {}, \nparameters: {}"\
+            .format(data["parameters"]["workforce"],
+                    data["parameters"]["t_max"],
+                    data["parameters"]["hebbian"],
+                    data["parameters"]["model_parameters"])
 
         Analysis.simple_analysis(data["indirect_exchanges"], figure_folder=figure_folder, msg=msg, suffix=suffix)
 
