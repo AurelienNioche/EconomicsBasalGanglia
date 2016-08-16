@@ -1,6 +1,2 @@
-# -----------------------------------------------------------------------------
-# Copyright (c) 2016, Nicolas P. Rougier
-# Distributed under the (new) BSD License.
-# -----------------------------------------------------------------------------
-from . cdana import *
+from module.cdana.cdana import *
 

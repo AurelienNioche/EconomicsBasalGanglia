@@ -5,7 +5,7 @@
 import os
 import json
 import numpy as np
-from cdana import *
+from module.cdana import *
 
 
 class Model(object):
@@ -173,7 +173,7 @@ class Model(object):
         for group in self._groups:
             group.evaluate(dt)
 
-    def choose(self, possible_moves, possible_strategies, stop=True):
+    def choose(self, possible_moves, possible_strategies=np.ones(4), stop=True):
 
         _ = self.parameters
 
