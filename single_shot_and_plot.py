@@ -36,7 +36,7 @@ def simple_run():
     model = "BG"
     model_parameters = "economics-model-parameters.json"
     hebbian = False
-    reward_amount = 2
+    reward_amount = 5
 
     param = \
         {
