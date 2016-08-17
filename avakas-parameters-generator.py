@@ -20,6 +20,7 @@ class ParametersGenerator(object):
 
         self.model_parameters = "economics-model-parameters.json"
         self.hebbian = False
+        self.reward_amount = 5
 
         self.n_cpu = 12
 
@@ -46,6 +47,8 @@ class ParametersGenerator(object):
             while response not in ['y', 'yes', 'n', 'no', 'Y', 'N']:
                 response = input("You can only respond by 'yes' or 'no'.")
 
+            print("Proceeding...")
+
             if response in ['y', 'yes', 'Y']:
 
                 if path.exists(self.folders["data"]):
@@ -53,6 +56,9 @@ class ParametersGenerator(object):
                 print("Data folder has been erased.")
             else:
                 print("Data folder has been conserved.")
+
+        else:
+            print("Proceeding...")
 
         print("Remove old scripts and logs...")
 
@@ -125,6 +131,7 @@ class ParametersGenerator(object):
                     "model": "BG",
                     "model_parameters": self.model_parameters,
                     "hebbian": self.hebbian,
+                    "reward_amount": self.reward_amount,
                     "cpu_count": self.n_cpu,
                     "idx": idx,  # For saving
                     "date": self.date  # For saving
@@ -225,8 +232,6 @@ class ParametersGenerator(object):
             response = input("You can only respond by 'yes' or 'no'.")
 
         if response in ['y', 'yes', 'Y']:
-
-            print("Proceeding...")
 
             self.empty_scripts_folder()
             self.create_folders()

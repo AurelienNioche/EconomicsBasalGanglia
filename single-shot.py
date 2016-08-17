@@ -15,11 +15,12 @@ def date():
 
 def simple_run(logs=True):
 
-    t_max = 500
-    workforce = np.array([50, 50, 100], dtype=int)
+    t_max = 30
+    workforce = np.array([5, 5, 5], dtype=int)
     model = "BG"
     model_parameters = "economics-model-parameters.json"
     hebbian = False
+    reward_amount = 10
 
     root_folder = "../single_shot_data"
 
@@ -41,6 +42,7 @@ def simple_run(logs=True):
             "model": model,
             "model_parameters": model_parameters,
             "hebbian": hebbian,
+            "reward_amount": reward_amount,
             "date": date(),
             "idx": np.random.randint(99999)
         }

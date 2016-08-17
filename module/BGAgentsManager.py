@@ -16,7 +16,6 @@ class EcoProcess(Process):
         self.model_parameters = kwargs["model_parameters"]
         self.hebbian = kwargs["hebbian"]
         self.n = kwargs["n"]
-        self.reward_amount = 2
         self.possibilities = [np.array([1., 1., 0., 0.]), np.array([0., 0., 1., 1.])]
 
     def run(self):
@@ -60,7 +59,7 @@ class EcoProcess(Process):
                 success = self.demand_queue.get()
                 for i in range(self.n):
 
-                    agents[i].learn(success[i]*self.reward_amount)
+                    agents[i].learn(success[i])
             else:
                 pass
 
@@ -85,6 +84,7 @@ class BGAgentsManager(object):
 
         self.model_parameters = parameters["model_parameters"]
         self.hebbian = parameters["hebbian"]
+        self.reward_amount = parameters["reward_amount"]
 
         self.n = np.sum(parameters["workforce"])  # Total number of agents
 
@@ -191,7 +191,7 @@ class BGAgentsManager(object):
         a = time()
 
         success_array = np.zeros(self.n)
-        success_array[success_id] = 1
+        success_array[success_id] = self.reward_amount
 
         cursor = 0
         for i in range(self.n_workers):
