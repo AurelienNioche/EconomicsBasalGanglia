@@ -31,8 +31,8 @@ class Analysis(object):
 
 def simple_run():
 
-    t_max = 40
-    workforce = np.array([5, 5, 15], dtype=int)
+    t_max = 50
+    workforce = np.array([5, 5, 20], dtype=int)
     model = "BG"
     model_parameters = "economics-model-parameters.json"
     hebbian = False
