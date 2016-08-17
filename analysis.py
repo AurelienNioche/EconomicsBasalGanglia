@@ -66,7 +66,7 @@ class Analysis(object):
 
 def main():
 
-    single = 1
+    single = 0
     if single:
 
         # data_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_data"
@@ -77,10 +77,10 @@ def main():
 
     else:
 
-        # data_folder = "/users/M-E4-ANIOCHE/Desktop/data"
-        # figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures"
-        data_folder = "../data-batch4"
-        figure_folder = "../figures-batch4"
+        data_folder = "/users/M-E4-ANIOCHE/Desktop/data"
+        figure_folder = "/users/M-E4-ANIOCHE/Desktop/figures"
+        # data_folder = "../data-batch4"
+        # figure_folder = "../figures-batch4"
 
     data_importer = DataImporter(data_folder=data_folder)
 

@@ -16,12 +16,7 @@ class EcoProcess(Process):
         self.model_parameters = kwargs["model_parameters"]
         self.hebbian = kwargs["hebbian"]
         self.n = kwargs["n"]
-        self.possible_strategies = \
-            np.array([[1., 0., 1., 0.],
-                      [1., 0., 0., 1.],
-                      [0., 1., 1., 0.],
-                      [0., 1., 0., 1.]])
-
+        self.reward_amount = 2
         self.possibilities = [np.array([1., 1., 0., 0.]), np.array([0., 0., 1., 1.])]
 
     def run(self):
@@ -65,7 +60,7 @@ class EcoProcess(Process):
                 success = self.demand_queue.get()
                 for i in range(self.n):
 
-                    agents[i].learn(success[i])
+                    agents[i].learn(success[i]*self.reward_amount)
             else:
                 pass
 

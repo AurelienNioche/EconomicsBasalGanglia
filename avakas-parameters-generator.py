@@ -16,7 +16,7 @@ class ParametersGenerator(object):
 
     def __init__(self):
 
-        self.t_max = 10000
+        self.t_max = 5000
 
         self.model_parameters = "economics-model-parameters.json"
         self.hebbian = False
@@ -90,16 +90,16 @@ class ParametersGenerator(object):
             workforce[2] = i
             workforce_list.append(workforce.copy())
 
-        workforce_step = 50
-        workforce_mini = 100
-        workforce_maxi = 400
-
-        workforce[:] = workforce_mini
-
-        possible_w = np.arange(workforce_mini, workforce_maxi+0.1, workforce_step)
-        for i in possible_w:
-            workforce[2] = i
-            workforce_list.append(workforce.copy())
+        # workforce_step = 50
+        # workforce_mini = 100
+        # workforce_maxi = 400
+        #
+        # workforce[:] = workforce_mini
+        #
+        # possible_w = np.arange(workforce_mini, workforce_maxi+0.1, workforce_step)
+        # for i in possible_w:
+        #     workforce[2] = i
+        #     workforce_list.append(workforce.copy())
 
         # for i in possible_w:
         #     for j in possible_w:

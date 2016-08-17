@@ -14,7 +14,7 @@
 #PBS -d /home/anioche/aurelien/EcoBGModel-master/EcoBGModel
 
 # walltime (hh:mm::ss)
-#PBS -l walltime=20:00:00
+#PBS -l walltime=10:00:00
 
 # Specify the number of nodes(nodes=) and the number of cores per nodes(ppn=) to be used
 #PBS -l nodes=1:ppn=6
@@ -53,4 +53,7 @@ echo main.py ~/aurelien/EcoBGModel-master/avakas_input_parameters/slice_0.p
 python main.py ~/aurelien/EcoBGModel-master/avakas_input_parameters/slice_0.p
 
 # all done
+echo "#############################"
+echo "Date:" `date`
 echo "Job finished"
+echo "#############################"
