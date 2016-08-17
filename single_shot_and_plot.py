@@ -1,4 +1,5 @@
 from pylab import plt, np
+import json
 from multiprocessing import cpu_count
 from module.simulation_manager import Launcher
 
@@ -22,32 +23,14 @@ class Analysis(object):
         plt.text(0, -0.12, "{}".format(msg))
 
         plt.show()
-        #if not exists(figure_folder):
-        #    mkdir(figure_folder)
-        #fig_name = "{}/figure_{}.pdf".format(figure_folder, suffix.split(".p")[0])
-        #plt.savefig(fig_name)
-        #plt.close()
 
 
 def simple_run():
 
-    t_max = 50
-    workforce = np.array([5, 5, 20], dtype=int)
-    model = "BG"
-    model_parameters = "economics-model-parameters.json"
-    hebbian = False
-    reward_amount = 5
+    param = json.load(open("simple-shot-and-plot-parameters.json", mode="r"))
 
-    param = \
-        {
-            "workforce": workforce,
-            "t_max": t_max,  # Set the number of time units the simulation will run.
-            "cpu_count": cpu_count(),
-            "model": model,
-            "model_parameters": model_parameters,
-            "hebbian": hebbian,
-            "reward_amount": reward_amount
-        }
+    param["cpu_count"] = cpu_count()
+    param["model"] = "BG"
 
     results = Launcher.launch(param, single=True)
 

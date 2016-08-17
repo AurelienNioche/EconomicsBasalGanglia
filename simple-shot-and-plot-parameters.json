@@ -1,0 +1,7 @@
+{
+            "workforce": [5, 5, 20],
+            "t_max": 50,
+            "model_parameters": "economics-model-parameters.json",
+            "hebbian": 0,
+            "reward_amount": 10
+}
