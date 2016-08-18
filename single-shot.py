@@ -15,12 +15,12 @@ def date():
 
 def simple_run(logs=True):
 
-    t_max = 30
-    workforce = np.array([5, 5, 5], dtype=int)
+    t_max = 500
+    workforce = np.array([50, 50, 100], dtype=int)
     model = "BG"
     model_parameters = "economics-model-parameters.json"
     hebbian = False
-    reward_amount = 10
+    reward_amount = 1
 
     root_folder = "../single_shot_data"
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # If on mac platform suppose that no log files are needed
     if platform == "Darwin":
 
-        simple_run(logs=True)
+        simple_run(logs=False)
     else:
 
-        simple_run(logs=False)
+        simple_run(logs=True)
