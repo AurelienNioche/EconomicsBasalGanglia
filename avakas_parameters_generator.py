@@ -19,7 +19,7 @@ class ParametersGenerator(object):
         self.t_max = 5000
 
         self.model_parameters = "economics-model-parameters.json"
-        self.hebbian = False
+        # self.hebbian = False
         self.reward_amount = 1
 
         self.n_cpu = 12
@@ -124,22 +124,24 @@ class ParametersGenerator(object):
 
         for workforce in workforce_list:
 
-            parameters = \
-                {
-                    "workforce": workforce,
-                    "t_max": self.t_max,  # Set the number of time units the simulation will run
-                    "model": "BG",
-                    "model_parameters": self.model_parameters,
-                    "hebbian": self.hebbian,
-                    "reward_amount": self.reward_amount,
-                    "cpu_count": self.n_cpu,
-                    "idx": idx,  # For saving
-                    "date": self.date  # For saving
+            for hebbian in [0, 1]:
 
-                }
-            parameters_list.append(parameters)
-            # increment idx
-            idx += 1
+                parameters = \
+                    {
+                        "workforce": workforce,
+                        "t_max": self.t_max,  # Set the number of time units the simulation will run
+                        "model": "BG",
+                        "model_parameters": self.model_parameters,
+                        "hebbian": hebbian,
+                        "reward_amount": self.reward_amount,
+                        "cpu_count": self.n_cpu,
+                        "idx": idx,  # For saving
+                        "date": self.date  # For saving
+
+                    }
+                parameters_list.append(parameters)
+                # increment idx
+                idx += 1
 
         return parameters_list
 
