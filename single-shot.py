@@ -58,9 +58,9 @@ def simple_run(logs=True):
 if __name__ == "__main__":
 
     # If on mac platform suppose that no log files are needed
-    if platform == "Darwin":
+    #if platform == "Darwin":
 
-        simple_run(logs=False)
-    else:
+    #    simple_run(logs=False)
+    #else:
 
-        simple_run(logs=True)
+    simple_run(logs=False)
