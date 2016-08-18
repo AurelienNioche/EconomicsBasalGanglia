@@ -16,7 +16,10 @@ class EcoProcess(Process):
         self.model_parameters = kwargs["model_parameters"]
         self.hebbian = kwargs["hebbian"]
         self.n = kwargs["n"]
-        self.possibilities = [np.array([1., 1., 0., 0.]), np.array([0., 0., 1., 1.])]
+        self.possible_moves = [np.array([1., 1., 0., 0.]),
+                               np.array([0., 0., 1., 1.])]
+        self.possible_strategies = [np.array([0., 1., 1., 1.]),
+                                    np.array([0., 0., 1., 1.])]
 
     def run(self):
 
@@ -27,9 +30,9 @@ class EcoProcess(Process):
         while not self.stop.is_set():
 
             # Wait for demand
-            p_choices = self.demand_queue.get()
+            decision_faced = self.demand_queue.get()
 
-            if p_choices is not None:
+            if decision_faced is not None:
 
                 ############################
                 #       CHOICE             #
@@ -39,12 +42,15 @@ class EcoProcess(Process):
                 choices = []
                 for i in range(self.n):
 
-                    possible_choices = self.possibilities[p_choices[i]]
+                    possible_moves = self.possible_moves[decision_faced[i]]
+                    possible_strategies = self.possible_strategies[decision_faced[i]]
 
-                    choice = agents[i].choose(possible_moves=possible_choices)
+                    choice = agents[i].choose(possible_moves=possible_moves,
+                                              possible_strategies=possible_strategies)
 
                     while choice["mot"] == -1:
-                        choice = agents[i].choose(possible_moves=possible_choices)
+                        choice = agents[i].choose(possible_moves=possible_moves,
+                                                  possible_strategies=possible_strategies)
 
                     choices.append(choice)
 
