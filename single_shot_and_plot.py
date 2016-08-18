@@ -46,7 +46,7 @@ def simple_run():
 
 if __name__ == "__main__":
 
-    if system() == 'Lunix':
+    if system() == 'Linux':
 
         # Test visual output
         plt.plot(np.arange(10), np.arange(10))
