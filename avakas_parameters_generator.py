@@ -16,7 +16,7 @@ class ParametersGenerator(object):
 
     def __init__(self):
 
-        self.t_max = 1000
+        self.t_max = 5000
 
         self.model_parameters = "economics-model-parameters.json"
         self.hebbian = False
