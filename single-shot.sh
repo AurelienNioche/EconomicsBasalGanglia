@@ -47,7 +47,7 @@ echo "#############################"
 
 # What you actually want to launch
 echo "Start the job"
-python single-shot.py
+python single_shot.py
 
 # all done
 echo "Job finished"

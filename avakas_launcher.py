@@ -39,7 +39,7 @@ class AvakasLauncher(object):
 
             print("System answers '{}'.".format(str(output)[:-1]))  # [:-1] is for removing the \n at the end
 
-            print()
+            print("\n")
 
             job_names.append(str(output).split(".")[0])  # Keep just the number of the job as ID
 
