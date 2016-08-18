@@ -72,8 +72,8 @@ def main():
         # data_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_data"
         # figure_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_figures"
 
-        data_folder = "../single_shot_data"
-        figure_folder = "../single_shot_figures"
+        data_folder = "../single_shot_data-2016-08-18"
+        figure_folder = "../single_shot_figures-2016-08-18"
 
     else:
 

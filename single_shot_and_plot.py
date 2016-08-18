@@ -28,7 +28,7 @@ class Analysis(object):
 
 def simple_run():
 
-    param = json.load(open("simple-shot-and-plot-parameters.json", mode="r"))
+    param = json.load(open("single-shot-and-plot-parameters.json", mode="r"))
 
     param["cpu_count"] = cpu_count()
     param["model"] = "BG"
