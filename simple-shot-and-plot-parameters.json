@@ -1,7 +1,7 @@
 {
-            "workforce": [5, 5, 10],
-            "t_max": 50,
+            "workforce": [50, 50, 100],
+            "t_max": 100,
             "model_parameters": "economics-model-parameters.json",
             "hebbian": 0,
-            "reward_amount": 2
+            "reward_amount": 1
 }

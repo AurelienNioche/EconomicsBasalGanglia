@@ -1,4 +1,5 @@
 from pylab import plt, np
+from platform import system
 import json
 from multiprocessing import cpu_count
 from module.simulation_manager import Launcher
@@ -44,5 +45,11 @@ def simple_run():
 
 
 if __name__ == "__main__":
+
+    if system() == 'Lunix':
+
+        # Test visual output
+        plt.plot(np.arange(10), np.arange(10))
+        plt.show()
 
     simple_run()
