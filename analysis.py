@@ -66,7 +66,7 @@ class Analysis(object):
 
 def main():
 
-    single = 1
+    single = 0
     if single:
 
         # data_folder = "/users/M-E4-ANIOCHE/Desktop/single_shot_data"

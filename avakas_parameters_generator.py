@@ -36,7 +36,7 @@ class ParametersGenerator(object):
             ]
         )
 
-        self.nb_sub_list = 100
+        self.nb_sub_list = 168
 
     def empty_scripts_folder(self):
 
@@ -92,27 +92,17 @@ class ParametersGenerator(object):
         workforce[:] = workforce_mini
 
         possible_w = np.arange(workforce_mini, workforce_maxi+0.1, workforce_step)
-        for i in possible_w:
-            workforce[2] = i
-            workforce_list.append(workforce.copy())
 
-        # workforce_step = 50
-        # workforce_mini = 100
-        # workforce_maxi = 400
-        #
-        # workforce[:] = workforce_mini
-        #
-        # possible_w = np.arange(workforce_mini, workforce_maxi+0.1, workforce_step)
         # for i in possible_w:
         #     workforce[2] = i
         #     workforce_list.append(workforce.copy())
 
-        # for i in possible_w:
-        #     for j in possible_w:
-        #         for k in possible_w:
-        #             if i <= j <= k:
-        #                 array[:] = i, j, k
-        #                 workforce_list.append(array.copy())
+        for i in possible_w:
+            for j in possible_w:
+                for k in possible_w:
+                    if i <= j <= k:
+                        workforce[:] = i, j, k
+                        workforce_list.append(workforce.copy())
 
         print("Length of workforce list:", len(workforce_list))
         return workforce_list
