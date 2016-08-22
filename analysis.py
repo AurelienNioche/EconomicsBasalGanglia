@@ -49,14 +49,27 @@ class Analysis(object):
     @classmethod
     def plot(cls, data, figure_folder, msg="", suffix=""):
 
+        fig, ax = plt.subplots()
+
+        plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)
+
         x = np.arange(len(data[:]))
 
-        plt.plot(x, data[:, 0], c="red", linewidth=2)
-        plt.plot(x, data[:, 1], c="blue", linewidth=2)
-        plt.plot(x, data[:, 2], c="green", linewidth=2)
-        plt.ylim([-0.01, 1.01])
-        plt.text(0, -0.12, "{}".format(msg))
+        ax.plot(x, data[:, 0], c="red", linewidth=2, label="agent 01")
+        ax.plot(x, data[:, 1], c="blue", linewidth=2, label="agent 12")
+        ax.plot(x, data[:, 2], c="green", linewidth=2, label="agent 20")
 
+        plt.ylim([-0.01, 1.01])
+
+        plt.text(0, -0.23, "PARAMETERS. {}".format(msg))
+
+        ax.legend(fontsize=12, bbox_to_anchor=(1.1, 1.05))  # loc='upper center'
+        ax.set_xlabel("$t$")
+        ax.set_ylabel("Proportion of agents proceeding to indirect exchange")
+
+        ax.set_title("Money emergence with a basal ganglia model")
+
+        # Save fig
         if not exists(figure_folder):
             mkdir(figure_folder)
         fig_name = "{}/figure_{}.pdf".format(figure_folder, suffix.split(".p")[0])
@@ -92,7 +105,7 @@ def main():
 
         try:
 
-            msg = "workforce: {}, t_max: {}, hebbian: {}, \nparameters: {}"\
+            msg = "workforce: {}, t_max: {}, hebbian: {}, \nmodel parameters: {}"\
                 .format(data["parameters"]["workforce"],
                         data["parameters"]["t_max"],
                         data["parameters"]["hebbian"],
@@ -100,7 +113,7 @@ def main():
 
         except KeyError:
 
-            msg = "workforce: {}, t_max: {}, \nparameters: {}" \
+            msg = "workforce: {}, t_max: {}, \nmodel parameters: {}" \
                 .format(data["parameters"]["workforce"],
                         data["parameters"]["t_max"],
                         data["parameters"]["model_parameters"])
